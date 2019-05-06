@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardMapper">
+ 	
+	
+	<resultMap id="boardSelectMap" type="board">
+		<result property="quesNo" 			column="ques_no" 			/>
+		<result property="quesId"	column="ques_id" 		/>
+		<result property="quesTitle" 	column="ques_title" 		/>
+		<result property="quesContent" 				column="ques_content" 				/>
+		<result property="quesState" 				column="ques_state" 				/>
+		<result property="quesDate" 				column="ques_date" 				/>
+		<result property="okContent" 			column="ok_content" 		/>
+	</resultMap>
+	
+	<!-- SQL : INSERT -->
+	<insert 	id="addBoard"		parameterType="board" >
+	 	INSERT INTO ques_board (ques_no ,
+                        ques_id ,
+                        ques_title ,
+                        ques_content,
+                        ques_state,
+                        ques_date
+                        )
+       VALUES( QUES_BOARD_NO.nextval,
+                #{quesId},
+                #{quesTitle},
+                #{quesContent},
+                #{quesState},
+                SYSDATE
+                )
+	 </insert>
+	 
+	 <!-- SQL : SELECT ONE -->
+	 <select 	id="getBoard"	parameterType="int"	resultMap="boardSelectMap">
+		select * 
+		from ques_board 
+		where ques_no = #{value}
+	 </select>
+	 
+	 <!-- SQL : UPDATE -->
+	 <update	id="updateBoard"	parameterType="board" >
+	   	update ques_board
+	   	<set>
+	   		ok_Content = #{okContent},
+	   		ques_state = #{quesState}
+	   	</set>
+	   	WHERE ques_no = #{quesNo}
+	 </update>
+		 
+	<!-- SQL : SELECT LIST -->
+	<select  id="getBoardList"  parameterType="map"	resultMap="boardSelectMap">
+	  	SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT *
+											FROM ques_board
+											
+												<where>
+												<if test="userId != 'admin'">
+													ques_id = #{userId}
+												</if>
+												</where>
+											
+											ORDER BY ques_no desc ) inner_table
+						WHERE ROWNUM &lt;= #{search.endRowNum} )
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
+	 </select>
+	 	<!--  위 두번째 subQuery 의  
+	 			WHERE ROWNUM &lt;= #{endRowNum} ) 는
+	 			WHERE ROWNUM <= #{endRowNum} ) 의미이며..
+	 			< 는 keyword 로 &lt; 를	사용.
+	 			
+	 			<![CDATA[  ~~~  ]]> 를 이용하여 아래와 같이 사용  할 수 있다.
+	 			CDATA ==> Character Data 의 의미 Java 에서 \n 같은 특수문자 처리  
+
+				WHERE ROWNUM <![CDATA[ <=]]> #{endRowNum} )
+		-->
+	 <select  id="getTotalCount"  parameterType="string"	 resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(	SELECT *
+											FROM ques_board
+											
+												<where>
+												<if test="_parameter != 'admin'">
+													ques_id = #{_parameter}
+												</if>
+												</where>
+											) countTable						
+	 </select>
+
+</mapper>
