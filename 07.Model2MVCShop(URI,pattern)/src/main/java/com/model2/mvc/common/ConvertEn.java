@@ -20,5 +20,6 @@ public static String convertKo(String value) {
 
 
 //커밋테스트용
+String test = "";
 
 }
