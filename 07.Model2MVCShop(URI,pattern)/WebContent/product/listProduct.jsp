@@ -9,21 +9,53 @@
 <title>상품 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
+<script
+  src="https://code.jquery.com/jquery-2.1.4.js"
+  integrity="sha256-siFczlgw4jULnUICcdm9gjQPZkw/YPDqhQ9+nAOScE4="
+  crossorigin="anonymous"></script>
 <script type="text/javascript">
-<!--
+
 // 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
 function fncGetList(currentPage) {
-	document.getElementById("currentPage").value = currentPage;
-   	document.detailForm.submit();		
+	
+	$('#currentPage').val(currentPage);
+	
+	$('form').attr("method","POST").attr("action","/product/listProduct").submit();
+	
+	
 }
 
+	$( function(){
+		$('.ct_list_admin td:nth-child(1)').on('click', function(){
+			$(self.location).attr("href","/purchase/getPurchase?tranNo="+$(this).text().trim());			
+		});
+		
+		$('.ct_list_admin td:nth-child(3)').on('click', function(){
+			$(self.location).attr("href","/product/getProduct?menu=${param.menu}&prodNo="+$(this).text().trim());			
+		});
+		
+		$('.ct_list_pop td:nth-child(9):contains("배송하기")').on('click', function(){
+			
+			//var temp = $('.ct_list_admin td:nth-child(9)').index(this);
+			//alert( $('.ct_list_pop td:nth-child(9)').index(this)    );
+			//alert(  $(  $('.ct_list_pop td:nth-child(1)')[$('.ct_list_pop td:nth-child(9)').index(this)]).text().trim() );
+			
+			var temp = $(  $('.ct_list_pop td:nth-child(1)')[$('.ct_list_pop td:nth-child(9)').index(this)]).text().trim();
+			
+			//alert(  $(  $('.ct_list_admin td:nth-child(1)')[temp]).text().trim() );
+			
+			
+			
+			$(self.location).attr("href","/purchase/updateTranCode?code=3&tranNo="+temp);			
+		});
+		
+		
+		
+	});
+	
 
-function fncGetProductList(){
-	document.detailForm.submit();
-}
 
--->
+
 
 </script>
 </head>
@@ -32,7 +64,7 @@ function fncGetProductList(){
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/product/listProduct" method="post">
+<form name="detailForm">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -124,10 +156,10 @@ function fncGetProductList(){
 
 	<tr class="ct_list_pop">  
 		<td align="center">
-		<a href="/purchase/getPurchase?tranNo=${list.tranNo}">${list.tranNo }</a></td>
+		${list.tranNo}</td>
 		<td></td>
 		<td align="left">
-			<a href="/product/getProduct?menu=${param.menu}&prodNo=${list.purchaseProd.prodNo}">${ list.purchaseProd.prodNo}</a>
+			 ${ list.purchaseProd.prodNo}  
 		</td>
 		<td></td>
 		<td align="left">${list.buyer.userId}</td>
@@ -139,10 +171,8 @@ function fncGetProductList(){
 			판매중
 			</c:if>
 			<c:if test = "${fn:trim(list.tranCode) == 2 }" >
-			구매중 
-				<c:if test = "${user.role eq 'admin' }">
-				&nbsp; <a href = "/purchase/updateTranCode?tranNo=${list.tranNo}&code=3">배송하기</a>
-				</c:if>
+			 배송하기
+				
 				</c:if>
 			<c:if test = "${fn:trim(list.tranCode) == 3 }" >
 			배송중

@@ -4,21 +4,35 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-
-
-
 <html>
 <head>
 <title>구매 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
+<script
+  src="https://code.jquery.com/jquery-2.1.4.js"
+  integrity="sha256-siFczlgw4jULnUICcdm9gjQPZkw/YPDqhQ9+nAOScE4="
+  crossorigin="anonymous"></script>
+  
 <script type="text/javascript">
 
 	function fncGetList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-	   	document.detailForm.submit();		
+		$('input[name="currentPage"]').val(currentPage);
+		$('form').attr("method","POST").attr("action","/purchase/listPurchase").submit();
+		
 	}
+	
+	
+	$( function() {
+		$('.ct_list_pop td:nth-child(1)').on('click', function(){
+			$(self.location).attr("href","/purchase/getPurchase?tranNo="+$(this).text().trim() );
+		})
+		
+		
+		$('.ct_list_pop td:nth-child(3)').on('click', function(){
+			$(self.location).attr("href","/user/getUser?userId="+$(this).text().trim() );
+		})
+	});
 </script>
 </head>
 
@@ -26,7 +40,7 @@
 
 <div style="width: 98%; margin-left: 10px;">
 
-<form name="detailForm" action="/purchase/listPurchase" method="post">
+<form name="detailForm">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -68,11 +82,11 @@
 	
 	<tr class="ct_list_pop">
 		<td align="center">
-			<a href="/purchase/getPurchase?tranNo=${vo.tranNo}">${vo.tranNo}</a>
+			${vo.tranNo}
 		</td>
 		<td></td>
 		<td align="left">
-			<a href="/user/getUser?userId=${vo.buyer.userId}">${vo.buyer.userId}</a>
+			${vo.buyer.userId}
 		</td>
 		<td></td>
 		<td align="left">${vo.buyer.userName}</td>

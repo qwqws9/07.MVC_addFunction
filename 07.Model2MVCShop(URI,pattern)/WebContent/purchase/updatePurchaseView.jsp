@@ -5,26 +5,81 @@
 
 <html>
 <head>
-<title>상품수정</title>
+
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script
+  src="https://code.jquery.com/jquery-2.1.4.js"
+  integrity="sha256-siFczlgw4jULnUICcdm9gjQPZkw/YPDqhQ9+nAOScE4="
+  crossorigin="anonymous"></script>
+  
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<title>구매정보수정</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
-<script type="text/javascript" src="../javascript/calendar.js">
 	
-</script>
 
 <script type="text/javascript">
-<!--
-	function fncAddProduct() {
 
-		document.detailForm.action = '/purchase/updatePurchase';
-		document.detailForm.submit();
-	}
+function fncUpdatePurchase(){
+	//Form 유효성 검증
+	
+	var receiverName = $('input[name="receiverName"]').val();
+	var receiverPhone = $('input[name="receiverPhone"]').val();
+	var divyAddr = $('input[name="divyAddr"]').val();
+	var divyDate = $('input[name="divyDate"]').val();
+	
 
-	function resetData() {
-		document.detailForm.reset();
+	if(receiverName == null || receiverName.length<1){
+		alert("구매자 이름은 반드시 입력하여야 합니다.");
+		$('input[name="receiverName"]').focus();
+		return;
 	}
-	-->
+	if(receiverPhone == null || receiverPhone.length<1){
+		alert("구매자 연락처는 반드시 입력하여야 합니다.");
+		$('input[name="receiverPhone"]').focus();
+		return;
+	}
+	if(divyAddr == null || divyAddr.length<1){
+		alert("주소는 반드시 입력하셔야 합니다.");
+		$('input[name="divyAddr"]').focus();
+		return;
+	}
+	if(divyDate == null || divyDate.length<1){
+		alert("배송희망 날짜는 반드시 입력하셔야 합니다.");
+		$('input[name="divyDate"]').focus();
+		return;
+	}
+	
+	
+	$('form').attr("method","POST").attr("action","/purchase/updatePurchase").submit();
+}
+
+
+
+	$( function(){
+		
+		 $( "#divyDate" ).datepicker( { dateFormat: 'yy-mm-dd' });
+		 
+		 $('td.ct_btn01:contains("수정")').on('click', function(){
+			 fncUpdatePurchase();
+		 });
+		 
+		 $('td.ct_btn01:contains("취소")').on('click', function(){
+			history.go(-1);
+		 });
+		 
+		   
+		
+		
+	});
+
 </script>
 </head>
 
@@ -151,11 +206,9 @@
 					align="absmiddle" />
 				</td>
 				<td bgcolor="D6D6D6" width="1"></td>
-				<td class="ct_write01"><input type="text" name="divyDate"
+				<td class="ct_write01"><input type="text" id="divyDate" name="divyDate"
 					readonly="readonly" class="ct_input_g"
 					style="width: 100px; height: 19px" maxLength="10" minLength="6" />
-					&nbsp;<img src="../images/ct_icon_date.gif" width="15" height="15"
-					onclick="show_calendar('document.detailForm.divyDate', document.detailForm.divyDate.value)" />
 				</td>
 			</tr>
 			<tr>
@@ -179,16 +232,18 @@
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
 								width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01"
-								style="padding-top: 3px;"><a
-								href="javascript:fncAddProduct();">수정</a></td>
+								style="padding-top: 3px;">
+								수정
+							</td>
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif"
 								width="14" height="23" /></td>
 							<td width="30"></td>
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
 								width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01"
-								style="padding-top: 3px;"><a
-								href="javascript:history.go(-1)">취소</a></td>
+								style="padding-top: 3px;">
+								취소
+									</td>
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif"
 								width="14" height="23" /></td>
 						</tr>

@@ -7,21 +7,56 @@
 
 <html>
 <head>
+<script
+  src="https://code.jquery.com/jquery-2.1.4.js"
+  integrity="sha256-siFczlgw4jULnUICcdm9gjQPZkw/YPDqhQ9+nAOScE4="
+  crossorigin="anonymous"></script>
 <script type="text/javascript">
-<!--
+
 // 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
 function fncGetList(currentPage) {
-	document.getElementById("currentPage").value = currentPage;
-   	document.detailForm.submit();		
+	
+	$('input[name="currentPage"]').val(currentPage);
+	//$('form').attr("method", "POST").attr("action","/product/getProduct");
+	move();
+	//document.getElementById("currentPage").value = currentPage;
+   	//document.detailForm.submit();		
 }
+
+function move() {
+	$('form').attr("method", "POST").attr("action","/product/getProduct").submit();
+}
+
+
+
+
 
 function fncGet1List(currentPage1) {
-	document.getElementById("currentPage1").value = currentPage1;
-   	document.detailForm.submit();		
+	$('input[name="currentPage1"]').val(currentPage1);
+	//$('form').attr("method", "POST").attr("action","/product/getProduct");
+	move();
 }
 
 
--->
+<!--  <a href="/product/listProduct?menu=manage">확인</a> -->
+<!-- <a href="/purchase/addPurchaseView?prodNo=${param.prodNo}">구매</a>  -->
+<!-- <a href="/quest/addBoardView?prodNo=${pVo.prodNo}">문의하기</a>  -->
+
+$( function(){
+	$('td.ct_btn01:contains("확인")').on('click', function(){
+		$(self.location).attr("href","/product/listProduct?menu=manage");
+	});
+	
+	$('td.ct_btn01:contains("구매")').on('click', function(){
+		$(self.location).attr("href","/purchase/addPurchaseView?prodNo=${param.prodNo}");
+	});
+	
+	$('td.ct_btn01:contains("문의하기")').on('click', function(){
+		$(self.location).attr("href","/quest/addBoardView?prodNo=${pVo.prodNo}");
+	});
+});
+
+
 
 </script>
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
@@ -31,7 +66,7 @@ function fncGet1List(currentPage1) {
 
 <body bgcolor="#ffffff" text="#000000">
 
-<form name="detailForm" method="post" action="/product/getProduct">
+<form name="detailForm">
 
 <input type = "hidden" name = "prodNo" value = "${pVo.prodNo }">
 <input type = "hidden" name = "menu" value = "search">
@@ -155,7 +190,8 @@ function fncGet1List(currentPage1) {
 					<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 				</td>
 				<td background="/images/ct_btnbg02.gif" class="ct_btn01"  style="padding-top: 3px;">
-					<a href="/purchase/addPurchaseView?prodNo=${param.prodNo}">구매</a>
+					<!-- <a href="/purchase/addPurchaseView?prodNo=${param.prodNo}">구매</a>  -->
+					구매
 				</td>
 				<td width="14" height="23">
 					<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -179,7 +215,8 @@ function fncGet1List(currentPage1) {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="/product/listProduct?menu=manage">확인</a>
+						<!--  <a href="/product/listProduct?menu=manage">확인</a> -->
+						확인
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -295,7 +332,8 @@ function fncGet1List(currentPage1) {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px; width:50px;">
-						<a href="/quest/addBoardView?prodNo=${pVo.prodNo}">문의하기</a>
+						<!-- <a href="/quest/addBoardView?prodNo=${pVo.prodNo}">문의하기</a>  -->
+						문의하기
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -335,7 +373,8 @@ function fncGet1List(currentPage1) {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px; width:50px;">
-						<a href="/quest/addBoardView?prodNo=${pVo.prodNo}">문의하기</a>
+						<!--  <a href="/quest/addBoardView?prodNo=${pVo.prodNo}">문의하기</a> -->
+						문의하기
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -347,7 +386,7 @@ function fncGet1List(currentPage1) {
 		<c:if test="${ page1.currentPage <= page1.pageUnit }">
 			◀ 이전
 	</c:if>
-	<c:if test="${ page1.currentPage > page1.pageUnit }">
+	<c:if  test="${ page1.currentPage > page1.pageUnit }">
 			<a href="javascript:fncGet1List('${ page1.currentPage-1}')">◀ 이전</a>
 	</c:if>
 	
